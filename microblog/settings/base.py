@@ -20,17 +20,47 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# Register database schemes in URLs.
+urlparse.uses_netloc.append('postgres')
+urlparse.uses_netloc.append('mysql')
+
+try:
+    if 'DATABASES' not in locals():
+        DATABASES = {}
+
+    if 'DATABASE_URL' in os.environ:
+        url = urlparse.urlparse(os.environ['DATABASE_URL'])
+
+        # Ensure default database exists.
+        DATABASES['default'] = DATABASES.get('default', {})
+
+        # Update with environment configuration.
+        DATABASES['default'].update({
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port,
+        })
+        if url.scheme == 'postgres':
+            DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+
+        if url.scheme == 'mysql':
+            DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
+except Exception:
+    print 'Unexpected error:', sys.exc_info() 
+
 DATABASES = {
-    #'default': dj_database_url.config()
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'de604ql3e0u8rm',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'dzuxteeyqszydz',
-        'PASSWORD': 'JzwpCOXm_RI9BNYNfvpD8H_DAg',
-        'HOST': 'ec2-23-21-196-147.compute-1.amazonaws.com', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '5432', # Set to empty string for default.
-    }
+    'default': dj_database_url.config()
+    #'default': {
+    #    'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+    #    'NAME': 'de604ql3e0u8rm',                      # Or path to database file if using sqlite3.
+    #    # The following settings are not used with sqlite3:
+    #    'USER': 'dzuxteeyqszydz',
+    #    'PASSWORD': 'JzwpCOXm_RI9BNYNfvpD8H_DAg',
+    #    'HOST': 'ec2-23-21-196-147.compute-1.amazonaws.com', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+    #    'PORT': '5432', # Set to empty string for default.
+    #}
 }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
