@@ -2,6 +2,8 @@ import os
 
 import dj_database_url
 
+from urlparse import urlparse
+
 # here() gives us file paths from the root of the system to the directory
 # holding the current file.
 here = lambda * x: os.path.join(os.path.abspath(os.path.dirname(__file__)), *x)
