@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import permalink
 from django.template.defaultfilters import slugify
 
 class Post(models.Model):
@@ -22,6 +23,12 @@ class Post(models.Model):
         if not self.slug:
             self.slug == slugify(self.title)
         super(Post, self).save(*args, **kwargs)
+    
+    @models.permalink
+    
+    def get_absolute_url(self):
+        return ("blog_detail", (), {"slug": self.slug})
+    
     
     
     

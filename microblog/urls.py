@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     # url(r'^microblog/', include('microblog.foo.urls')),
     url(r'^$', views.HomepageView.as_view(), name="home"),
     url(r'^blog/$', PostListView.as_view(), name="blog_list"),
-    url(r'^blog/(?P<pk>\d+)/$', PostDetailView.as_view(), name="blog_detail"),
+    url(r'^blog/(?P<slug>[\w-]+)/$', PostDetailView.as_view(), name="blog_detail"),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
