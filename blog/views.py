@@ -9,14 +9,6 @@ class PublishedPostsMixin(object):
 
 class PostListView(PublishedPostsMixin, ListView):
     model = Post
-    
-    def get_queryset(self,):
-        queryset = super(PostListView, self).get_queryset()
-        return queryset.filter(published=True) 
 
 class PostDetailView(PublishedPostsMixin, DetailView):
     model = Post
-    
-    def get_queryset(self,):
-        queryset = super(PostDetailView, self).get_queryset()
-        return queryset.filter(published=True)
